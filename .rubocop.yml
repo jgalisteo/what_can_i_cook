@@ -2,6 +2,9 @@
 AllCops:
   NewCops: enable
 
+Layout/SpaceInsideHashLiteralBraces:
+  EnforcedStyle: no_space
+
 Style/Documentation:
   Enabled: false
 
