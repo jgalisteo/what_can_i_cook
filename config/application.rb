@@ -34,5 +34,8 @@ module WhatCanICook
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # db/structure.sql instead of db/scheme.rb
+    config.active_record.schema_format = :sql
   end
 end
