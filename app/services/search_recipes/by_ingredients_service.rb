@@ -7,7 +7,7 @@ module SearchRecipes
     MAX_INGREDIENTS = 20
     MAX_RECIPES = 10
 
-    attribute :ingredients, :string
+    attribute :ingredients, :string, default: ''
     attribute :limit, :integer, default: MAX_RECIPES
 
     validates_each :splitted_ingredients do |record, _, value|

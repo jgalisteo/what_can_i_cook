@@ -1,0 +1,39 @@
+<h1>
+  Search Recipes
+</h1>
+
+<p>
+ What do you have in your fridge?
+</p>
+
+<%= form_tag search_recipes_path, method: :get do %>
+  <%= label_tag :ingredients, 'Ingredients' %>
+  <%= text_field_tag :ingredients, params[:ingredients], placeholder: 'Comma separated' %>
+  <%= submit_tag 'Submit' %>
+<% end %>
+
+<%- if @errors %>
+  <%- @errors.each do |error| %>
+    <p>
+      <%= error.message %>
+    </p>
+  <% end %>
+<% end %>
+
+<%- if @recipes.present? %>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @recipes.each do |recipe| %>
+      <tr>
+        <td><%= recipe.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
