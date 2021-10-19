@@ -1,0 +1,46 @@
+<h1>
+  <strong>Name:</strong>
+  <%= @recipe.name %>
+</h1>
+
+<%- if @recipe.image.present? %>
+  <%= image_tag @recipe.image %>
+<% end %>
+
+<p>
+  <strong>Rate:</strong>
+  <%= @recipe.rate %>
+</p>
+
+<p>
+  <strong>Difficulty:</strong>
+  <%= @recipe.difficulty %>
+</p>
+
+<p>
+  <strong>People:</strong>
+  <%= @recipe.people %>
+</p>
+
+<p>
+  <strong>Preparation time:</strong>
+  <%= @recipe.preparation_time %>
+</p>
+
+<p>
+  <strong>Cook time:</strong>
+  <%= @recipe.cook_time %>
+</p>
+
+<p>
+  <strong>Total time:</strong>
+  <%= @recipe.total_time %>
+</p>
+
+<ul>
+  <%- @recipe.ingredients.each do |ingredient| %>
+    <li><%= ingredient.name %></li>
+  <% end %>
+</ul>
+
+<%= link_to 'Back', :back %>

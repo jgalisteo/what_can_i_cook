@@ -24,14 +24,14 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
+      <th>Recipe name</th>
     </tr>
   </thead>
 
   <tbody>
     <% @recipes.each do |recipe| %>
       <tr>
-        <td><%= recipe.name %></td>
+        <td><%= link_to recipe.name, recipe %></td>
       </tr>
     <% end %>
   </tbody>
