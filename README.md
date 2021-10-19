@@ -2,6 +2,8 @@
 
 Rails app to search recipes by a list of ingredients.
 
+There is a demo running in https://secret-waters-21743.herokuapp.com/
+
 ## Configuration
 
 Ensure that are installed:
