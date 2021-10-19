@@ -1,24 +1,51 @@
-# README
+# What can I cook?
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Rails app to search recipes by a list of ingredients.
 
-Things you may want to cover:
+## Configuration
 
-* Ruby version
+Ensure that are installed:
 
-* System dependencies
+- ruby 3.0.2
+- node 14.16.0
+- postgresql 12.8
 
-* Configuration
+The first step is to install `bundler` and ruby dependencies:
 
-* Database creation
+```
+gem install bundler
+bundle install
+```
 
-* Database initialization
+The next step is to setup the database:
 
-* How to run the test suite
+```
+bundle exec rails db:migrate
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+Finally, start development server:
 
-* Deployment instructions
+```
+bundle exec rails server
+```
 
-* ...
+And visit http://localhost:3000
+
+### Database seed
+
+Recipes can be inserted into the datebase with a rails task and a JSON file. The entry format is
+described in the [python-marmiton README](https://github.com/remaudcorentin-dev/python-marmiton#marmitonget-return-a-dictionary-like-).
+
+There is an example file in `examples` directory in the root of this repository:
+
+```
+bundle exec rails db:insert_json_recipes[examples/recipes.json]
+```
+
+## Tests
+
+For running tests:
+
+```
+bundle exec rspec
+```
