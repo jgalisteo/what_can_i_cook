@@ -12,6 +12,12 @@
   <%= submit_tag 'Submit' %>
 <% end %>
 
+<%- if @recipes.blank? && params[:ingredients].present? %>
+  <p>
+    There are no recipes. Try another ingredients.
+  </p>
+<% end %>
+
 <%- if @errors %>
   <%- @errors.each do |error| %>
     <p>
