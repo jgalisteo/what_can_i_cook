@@ -4,36 +4,40 @@ RSpec.describe SearchRecipes::ByIngredientsService do
 
     describe 'Basic search' do
       before do
-        @recipe = create(:recipe)
+        @recipe = create(:recipe, rate: nil)
         @ingredient = create(:ingredient, recipe: @recipe)
         create(:ingredient, name: common_ingredient_name, recipe: @recipe)
 
-        @another_recipe = create(:recipe)
-        @another_ingredient = create(:ingredient, recipe: @another_recipe)
-        create(:ingredient, name: common_ingredient_name, recipe: @another_recipe)
+        @second_recipe = create(:recipe, rate: 5)
+        @second_ingredient = create(:ingredient, recipe: @second_recipe)
+        create(:ingredient, name: common_ingredient_name, recipe: @second_recipe)
+
+        @third_recipe = create(:recipe, rate: 3)
+        create(:ingredient, name: @ingredient.name, recipe: @third_recipe)
+        create(:ingredient, name: common_ingredient_name, recipe: @third_recipe)
       end
 
       it 'returns recipes' do
         result = described_class.new(ingredients: @ingredient.name).execute
 
-        expect(result).to match_array([@recipe])
+        expect(result).to match_array([@recipe, @third_recipe])
       end
 
       context 'with shared ingredients' do
         it 'returns recipes' do
           result = described_class.new(ingredients: common_ingredient_name).execute
 
-          expect(result).to match_array([@recipe, @another_recipe])
+          expect(result).to match_array([@recipe, @second_recipe, @third_recipe])
         end
       end
 
       context 'with different ingredients' do
-        it 'returns empty' do
+        it 'returns recipes' do
           result = described_class.new(
-            ingredients: [@ingredient.name, @another_ingredient.name].join(',')
+            ingredients: [@ingredient.name, @second_ingredient.name].join(',')
           ).execute
 
-          expect(result).to eq([])
+          expect(result).to match_array([@recipe, @second_recipe, @third_recipe])
         end
       end
 
@@ -41,7 +45,7 @@ RSpec.describe SearchRecipes::ByIngredientsService do
         it 'returns empty' do
           result = described_class.new(ingredients: '').execute
 
-          expect(result).to eq([])
+          expect(result).to be_empty
         end
       end
 
@@ -49,7 +53,17 @@ RSpec.describe SearchRecipes::ByIngredientsService do
         it 'returns empty' do
           result = described_class.new(ingredients: nil).execute
 
-          expect(result).to eq([])
+          expect(result).to be_empty
+        end
+      end
+
+      describe 'Order' do
+        it 'ingredients match DESC, rate DESC NULLS LAST' do
+          result = described_class.new(
+            ingredients: [common_ingredient_name, @ingredient.name].join(',')
+          ).execute
+
+          expect(result).to eq([@third_recipe, @recipe, @second_recipe])
         end
       end
     end
@@ -64,7 +78,7 @@ RSpec.describe SearchRecipes::ByIngredientsService do
       it 'returns ten results maximum' do
         result = described_class.new(ingredients: common_ingredient_name).execute
 
-        expect(result.count).to eq(10)
+        expect(result.to_a.count).to eq(10)
       end
     end
 

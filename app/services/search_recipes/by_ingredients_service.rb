@@ -20,23 +20,24 @@ module SearchRecipes
     end
 
     def execute
-      return [] if ingredients.blank?
+      return Recipe.none if ingredients.blank?
 
-      mapped_ingredients = splitted_ingredients.map do |ingredient|
-        Recipe.joins(:ingredients).select(:id).where(
-          "to_tsvector('fr', ingredients.name) @@ phraseto_tsquery('fr ', ?)",
-          ingredient
-        ).to_sql
-      end
-
-      query = "(#{mapped_ingredients.join(') INTERSECT (')}) LIMIT #{limit}"
-
-      results = ActiveRecord::Base.connection.execute(query)
-
-      Recipe.find(results.map { |result| result['id'] })
+      query.group(:id)
+           .order("COUNT(#{Recipe.table_name}.id) DESC")
+           .order("#{Recipe.table_name}.rate DESC NULLS LAST")
+           .limit(limit)
     end
 
     private
+
+    def query
+      splitted_ingredients.map { |ingredient|
+        Recipe.joins(:ingredients).where(
+          "to_tsvector('fr', ingredients.name) @@ phraseto_tsquery('fr ', ?)",
+          ingredient
+        )
+      }.reduce(:or)
+    end
 
     def splitted_ingredients
       ingredients.split(',').map(&:squish)
